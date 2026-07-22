@@ -305,6 +305,28 @@ section { position: relative; }
 }
 .st-note svg { flex: 0 0 auto; width: 20px; height: 20px; color: var(--enlupa-azure); }
 
+/* Google-Maps-Einbettungen je Standort (kein API-Key nötig) */
+.map-grid {
+  margin-top: clamp(1.6rem, 4vw, 2.4rem);
+  display: grid; grid-template-columns: 1fr; gap: 1px;
+  background: var(--hairline); border: 1px solid var(--hairline); border-radius: var(--radius); overflow: hidden;
+}
+@media (min-width: 700px) { .map-grid { grid-template-columns: repeat(2, 1fr); } }
+.map-card { background: var(--surface); }
+.map-card__head {
+  padding: 0.85rem 1.1rem; display: flex; align-items: center; justify-content: space-between; gap: 0.6rem;
+}
+.map-card__head h3 { font-family: var(--font-display); font-weight: 700; font-size: 1.02rem; margin: 0; letter-spacing: -0.01em; }
+.map-card__head a {
+  display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.82rem; color: var(--enlupa-azure);
+  white-space: nowrap;
+}
+.map-card__head a:hover { color: var(--text); }
+.map-card iframe {
+  display: block; width: 100%; aspect-ratio: 4 / 3; border: 0;
+  filter: grayscale(.2) saturate(1.1) invert(0.92) hue-rotate(180deg) contrast(0.92);
+}
+
 /* ================================================================
    BENTO ("Warum Enlupa" / Mehrwert-Blöcke)
    ================================================================ */
