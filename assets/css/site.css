@@ -326,6 +326,7 @@ section { position: relative; }
   display: block; width: 100%; aspect-ratio: 4 / 3; border: 0;
   filter: grayscale(.2) saturate(1.1) invert(0.92) hue-rotate(180deg) contrast(0.92);
 }
+.map-card__addr { margin: 0; padding: 0.6rem 1.1rem 0.85rem; font-size: 0.78rem; color: var(--muted); }
 
 /* ================================================================
    BENTO ("Warum Enlupa" / Mehrwert-Blöcke)
