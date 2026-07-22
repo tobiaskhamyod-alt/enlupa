@@ -1,1022 +1,262 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<!--
-  Enlupa · Powerbankvermietung in Freiburg — Demo-Website (Single-File)
-  ---------------------------------------------------------------------
-  Diese Datei ist eine unverbindliche Demo von Kaiserstuhl Digital.
-  Alles inline, kein Build. Externe Libs: nur GSAP + ScrollTrigger (CDN).
-  Keine Fotos, keine Stock-/KI-Bilder — der Look trägt sich rein über
-  Typografie, Elektro-Blau und CSS/SVG-Glow.
-
-  FONTS / DSGVO-HINWEIS:
-  Es wird KEIN Google-Fonts-CDN geladen. Die @font-face-Blöcke weiter unten
-  erwarten selbst gehostete Dateien unter ./assets/fonts/ (Cabinet Grotesk
-  als Display, Inter als Fließtext). Fehlen die Dateien, greift automatisch
-  ein sauberer System-Font-Stack — die Seite sieht auch dann fertig aus.
-  Zum Aktivieren: Cabinet Grotesk (fontshare.com) + Inter (rsms.me/inter)
-  als .woff2 in ./assets/fonts/ legen. Beide DSGVO-konform lokal ausliefern.
--->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Enlupa · Powerbank leihen in Freiburg</title>
-<meta name="description" content="Enlupa — Powerbankvermietung in Freiburg. Leih dir an einer Station eine Powerbank, lad unterwegs auf und gib sie an jeder Station zurück. Bezahlen bargeldlos.">
+<title>Enlupa · Powerbank leihen, laden, überall zurückgeben</title>
+<meta name="description" content="Enlupa ist eine mobile Powerbank-Station in Freiburg. Powerbank ausleihen, unterwegs laden und an jeder Enlupa-Station wieder zurückgeben.">
 <meta name="theme-color" content="#0A0C10">
 <meta name="color-scheme" content="dark">
-
-<!-- Open Graph (nur ehrliche Daten, kein Bild) -->
 <meta property="og:type" content="website">
 <meta property="og:locale" content="de_DE">
 <meta property="og:site_name" content="Enlupa">
-<meta property="og:title" content="Enlupa · Powerbank leihen in Freiburg">
-<meta property="og:description" content="Nie wieder mit leerem Akku durch Freiburg. Powerbank an einer Station leihen, unterwegs laden, an jeder Station zurückgeben.">
-
-<!-- Favicon: gezeichneter Blitz in Enlupa-Blau, inline (kein externer Request) -->
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%230A0C10'/%3E%3Cpolygon points='13 3 5 13 11.5 13 10.5 21 19 11 12.5 11 13 3' fill='%235AA9FF'/%3E%3C/svg%3E">
-
-<!-- LocalBusiness JSON-LD — ausschließlich verifizierte Angaben.
-     Keine Adresse, keine Telefonnummer, keine Preise erfunden. -->
+<meta property="og:title" content="Enlupa · Powerbank leihen, laden, überall zurückgeben">
+<meta property="og:description" content="Mehr Freiheit für Menschen unterwegs und ein besseres Erlebnis bei deinem Besuch — mit Enlupa-Powerbank-Stationen in Freiburg.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='12' fill='%231B82D8'/%3E%3Cpath d='M13 4 5 13.5h5.2L9 20l8-9.5h-5.2L13 4z' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/css/site.css">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
   "name": "Enlupa",
-  "description": "Powerbankvermietung in Freiburg. Powerbank an einer Station leihen, unterwegs laden und an jeder Station in der Stadt zurückgeben. Bezahlen bargeldlos.",
+  "description": "Enlupa ist eine mobile Powerbank-Station, die es Menschen ermöglicht, ihr Smartphone einfach, schnell und flexibel überall und jederzeit zu laden. Besucher können eine Powerbank ausleihen, unterwegs laden und an jeder Enlupa-Station wieder zurückgeben.",
   "areaServed": { "@type": "City", "name": "Freiburg im Breisgau" },
-  "slogan": "Rent. Charge. Return. Keep moving.",
-  "paymentAccepted": "Apple Pay, Google Pay, PayPal, Karte",
+  "slogan": "Leihen. Laden. Überall zurückgeben.",
   "sameAs": [ "https://www.instagram.com/enlupa.official" ]
 }
 </script>
-
-<style>
-  /* ============================================================
-     FONTS — selbst gehostet, mit robustem System-Fallback.
-     (Dateien optional; fehlt eine, übernimmt der Fallback-Stack.)
-     ============================================================ */
-  @font-face {
-    font-family: "Cabinet Grotesk";
-    src: url("./assets/fonts/CabinetGrotesk-Extrabold.woff2") format("woff2");
-    font-weight: 800; font-style: normal; font-display: swap;
-  }
-  @font-face {
-    font-family: "Cabinet Grotesk";
-    src: url("./assets/fonts/CabinetGrotesk-Bold.woff2") format("woff2");
-    font-weight: 700; font-style: normal; font-display: swap;
-  }
-  @font-face {
-    font-family: "Inter var";
-    src: url("./assets/fonts/Inter-roman.var.woff2") format("woff2");
-    font-weight: 100 900; font-style: normal; font-display: swap;
-  }
-
-  /* ============================================================
-     TOKENS — Enlupa-Palette (dark-first). Navy/Gold NUR im Badge
-     und im Footer-Credit, sonst nirgends.
-     ============================================================ */
-  :root {
-    --enlupa-blue:  #2F80ED;
-    --enlupa-azure: #5AA9FF;
-    --ink:          #0A0C10;
-    --surface:      #12151C;
-    --surface-2:    #1A1E27;
-    --text:         #F4F6FA;
-    --muted:        #9AA4B2;
-    --glow:         rgba(90, 169, 255, .35);
-    --glow-soft:    rgba(90, 169, 255, .16);
-    --hairline:     rgba(90, 169, 255, .14);
-    --hairline-2:   rgba(244, 246, 250, .08);
-
-    /* Ausschließlich für Demo-Badge + Footer-Credit (Kaiserstuhl) */
-    --navy: #0f1628;
-    --gold: #C9A84C;
-
-    --font-display: "Cabinet Grotesk", "Inter var", system-ui, -apple-system,
-                    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    --font-body: "Inter var", system-ui, -apple-system, "Segoe UI", Roboto,
-                 Helvetica, Arial, sans-serif;
-    --font-mono: ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono",
-                 Menlo, Consolas, monospace;
-
-    --maxw: 1200px;
-    --pad-x: clamp(1.15rem, 5vw, 4rem);
-    --section-y: clamp(4.5rem, 11vh, 8.5rem);
-    --radius: 20px;
-  }
-
-  *, *::before, *::after { box-sizing: border-box; }
-
-  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
-  @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-  }
-
-  body {
-    margin: 0;
-    background: var(--ink);
-    color: var(--text);
-    font-family: var(--font-body);
-    font-size: clamp(1rem, 0.96rem + 0.2vw, 1.075rem);
-    line-height: 1.65;
-    font-feature-settings: "cv05" 1, "ss01" 1, "calt" 1;
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-    overflow-x: hidden;
-  }
-
-  /* Ambient elektrischer Grundschimmer über der ganzen Seite */
-  body::before {
-    content: "";
-    position: fixed; inset: 0;
-    background:
-      radial-gradient(60vw 40vw at 78% -8%, var(--glow-soft), transparent 60%),
-      radial-gradient(55vw 45vw at -10% 108%, rgba(47,128,237,.10), transparent 60%);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  a { color: inherit; text-decoration: none; }
-  img, svg { max-width: 100%; }
-  ::selection { background: var(--enlupa-blue); color: #fff; }
-
-  :focus-visible {
-    outline: 2px solid var(--enlupa-azure);
-    outline-offset: 3px;
-    border-radius: 4px;
-  }
-
-  /* ============================================================
-     TYPO-BAUSTEINE
-     ============================================================ */
-  .display {
-    font-family: var(--font-display);
-    font-weight: 800;
-    letter-spacing: -0.025em;
-    line-height: 0.98;
-    text-wrap: balance;
-  }
-  .eyebrow {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: var(--enlupa-azure);
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6em;
-  }
-  .eyebrow::before {
-    content: "";
-    width: 1.8em; height: 1px;
-    background: linear-gradient(90deg, var(--enlupa-azure), transparent);
-  }
-  .lead {
-    font-size: clamp(1.1rem, 1rem + 0.7vw, 1.4rem);
-    color: var(--muted);
-    line-height: 1.55;
-    max-width: 46ch;
-  }
-
-  /* ============================================================
-     LAYOUT
-     ============================================================ */
-  .wrap { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: var(--pad-x); }
-  main { position: relative; z-index: 1; }
-  section { position: relative; }
-  .section-pad { padding-block: var(--section-y); }
-  .rule-top { border-top: 1px solid var(--hairline); }
-
-  /* ============================================================
-     NAV
-     ============================================================ */
-  .nav {
-    position: sticky; top: 0; z-index: 50;
-    backdrop-filter: saturate(140%) blur(12px);
-    -webkit-backdrop-filter: saturate(140%) blur(12px);
-    background: linear-gradient(to bottom, rgba(10,12,16,.82), rgba(10,12,16,.5));
-    border-bottom: 1px solid var(--hairline);
-  }
-  .nav-inner {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 1rem; height: 64px;
-  }
-  .brand { display: inline-flex; align-items: center; gap: 0.6rem; }
-  .brand__bolt { width: 26px; height: 26px; filter: drop-shadow(0 0 8px var(--glow)); }
-  .brand__word {
-    font-family: var(--font-display); font-weight: 800; font-size: 1.32rem;
-    letter-spacing: -0.02em;
-  }
-  .brand__charge {
-    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.12em;
-    color: var(--enlupa-azure); padding: 2px 7px; border-radius: 999px;
-    border: 1px solid var(--hairline); margin-left: 2px;
-    font-variant-numeric: tabular-nums; white-space: nowrap;
-  }
-  .nav-links { display: flex; align-items: center; gap: clamp(0.9rem, 2vw, 1.9rem); }
-  .nav-links a { color: var(--muted); font-size: 0.92rem; transition: color .2s; }
-  .nav-links a:hover { color: var(--text); }
-  .nav-ig {
-    color: var(--text) !important; border: 1px solid var(--hairline);
-    padding: 8px 15px; border-radius: 999px; display: inline-flex; align-items: center; gap: .5em;
-    transition: border-color .2s, background .2s;
-  }
-  .nav-ig:hover { border-color: var(--enlupa-azure); background: var(--glow-soft); }
-  .nav-hide-sm { display: none; }
-  @media (min-width: 720px) { .nav-hide-sm { display: inline; } }
-
-  /* Globaler Scroll-„Ladebalken" oben */
-  .charge-track {
-    position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 60;
-    background: transparent;
-  }
-  .charge-track__fill {
-    height: 100%; width: 0%;
-    background: linear-gradient(90deg, var(--enlupa-blue), var(--enlupa-azure));
-    box-shadow: 0 0 12px var(--glow);
-  }
-
-  /* ============================================================
-     HERO
-     ============================================================ */
-  .hero { position: relative; overflow: hidden; padding-top: clamp(2rem, 6vh, 4rem); padding-bottom: var(--section-y); }
-  .hero__lower {
-    display: grid; grid-template-columns: 1fr; gap: clamp(2rem, 5vw, 3.5rem);
-    align-items: center; margin-top: clamp(1.6rem, 4vw, 2.6rem);
-  }
-  @media (min-width: 900px) {
-    .hero__lower { grid-template-columns: minmax(0, 1fr) minmax(0, 0.62fr); }
-  }
-
-  .cycle {
-    display: inline-flex; align-items: baseline; gap: 0.55rem; flex-wrap: wrap;
-    font-family: var(--font-mono); font-size: 0.82rem; letter-spacing: 0.14em;
-    text-transform: uppercase; margin-bottom: 1.5rem;
-  }
-  .cycle__word { color: var(--muted); opacity: .35; transition: opacity .4s, color .4s, text-shadow .4s; }
-  .cycle__word.is-on { color: var(--enlupa-azure); opacity: 1; text-shadow: 0 0 16px var(--glow); }
-  .cycle__sep { color: var(--enlupa-blue); opacity: .5; }
-  .cycle__keep { color: var(--muted); letter-spacing: 0.2em; }
-
-  .hero h1 {
-    margin: clamp(1.1rem, 3vw, 1.8rem) 0 0;
-    font-size: clamp(2.35rem, 0.9rem + 4.4vw, 4rem);
-  }
-  .hero h1 { text-wrap: normal; }
-  .hero h1 .spark { color: var(--enlupa-azure); text-shadow: 0 0 30px var(--glow); white-space: nowrap; }
-  .hero h1 .hl { display: block; }
-  .hero__sub { margin: 0 0 2.1rem; }
-
-  .cta-row { display: flex; flex-wrap: wrap; gap: 0.85rem; }
-  .btn {
-    display: inline-flex; align-items: center; gap: 0.6em;
-    font-weight: 600; font-size: 1rem; letter-spacing: -0.01em;
-    padding: 15px 24px; border-radius: 999px; cursor: pointer;
-    border: 1px solid transparent; transition: transform .18s, box-shadow .25s, background .25s, border-color .25s;
-    will-change: transform;
-  }
-  .btn--primary {
-    background: linear-gradient(180deg, var(--enlupa-azure), var(--enlupa-blue));
-    color: #04121f; box-shadow: 0 8px 30px -8px var(--glow), inset 0 1px 0 rgba(255,255,255,.35);
-  }
-  .btn--primary:hover { transform: translateY(-2px); box-shadow: 0 14px 40px -8px var(--glow), inset 0 1px 0 rgba(255,255,255,.4); }
-  .btn--ghost { border-color: var(--hairline); color: var(--text); background: rgba(255,255,255,.02); }
-  .btn--ghost:hover { border-color: var(--enlupa-azure); transform: translateY(-2px); background: var(--glow-soft); }
-
-  .hero__pay {
-    margin-top: 2.2rem; font-size: 0.86rem; color: var(--muted);
-    display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;
-  }
-  .hero__pay b { color: var(--text); font-weight: 600; }
-  .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--enlupa-blue); box-shadow: 0 0 8px var(--glow); display: inline-block; }
-
-  /* Hero-Bolt (SVG), lädt sich beim Scrollen auf */
-  .hero__art { position: relative; display: grid; place-items: center; min-height: 320px; }
-  .bolt-stage {
-    position: relative; width: min(64vw, 300px); aspect-ratio: 3 / 4;
-    display: grid; place-items: center;
-  }
-  .bolt-halo {
-    position: absolute; inset: -12% -6%;
-    background: radial-gradient(closest-side, var(--glow), transparent 72%);
-    filter: blur(6px); animation: pulse 3.4s ease-in-out infinite;
-  }
-  @keyframes pulse { 0%,100% { opacity:.55; transform: scale(.94);} 50% { opacity:1; transform: scale(1.04);} }
-  @media (prefers-reduced-motion: reduce) { .bolt-halo { animation: none; opacity: .7; } }
-  .hero-bolt { position: relative; width: 100%; height: 100%; overflow: visible; }
-  .hero-bolt .bolt-base { fill: rgba(90,169,255,.10); }
-  .hero-bolt .bolt-fill { fill: url(#boltGrad); }
-  .hero-bolt .bolt-stroke { fill: none; stroke: var(--enlupa-azure); stroke-width: .5; stroke-linejoin: round; filter: drop-shadow(0 0 6px var(--glow)); }
-  .bolt-readout {
-    position: absolute; bottom: 4%; right: -2%;
-    font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: .1em;
-    color: var(--enlupa-azure); background: rgba(10,12,16,.7);
-    border: 1px solid var(--hairline); border-radius: 999px; padding: 4px 10px;
-    font-variant-numeric: tabular-nums;
-  }
-
-  /* ============================================================
-     ABLAUF (So funktioniert's) — Ladeanzeige Schritt 1 -> 3
-     ============================================================ */
-  .heads { max-width: 62ch; }
-  .heads h2 { font-size: clamp(2rem, 1.3rem + 3.2vw, 3.5rem); margin: 1rem 0 0; }
-  .heads p { color: var(--muted); margin-top: 1rem; }
-
-  .steps { margin-top: clamp(2.5rem, 6vw, 4rem); }
-  .steps__bar {
-    position: relative; height: 3px; border-radius: 3px;
-    background: var(--hairline); margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
-    overflow: visible;
-  }
-  .steps__fill {
-    position: absolute; left: 0; top: 0; bottom: 0; width: 0%;
-    border-radius: 3px;
-    background: linear-gradient(90deg, var(--enlupa-blue), var(--enlupa-azure));
-    box-shadow: 0 0 16px var(--glow);
-  }
-  .steps__grid {
-    display: grid; grid-template-columns: 1fr; gap: 1px;
-    background: var(--hairline); border: 1px solid var(--hairline); border-radius: var(--radius);
-    overflow: hidden;
-  }
-  @media (min-width: 760px) { .steps__grid { grid-template-columns: repeat(3, 1fr); } }
-  .step {
-    background: var(--surface); padding: clamp(1.4rem, 3vw, 2.2rem);
-    display: flex; flex-direction: column; gap: 0.7rem; position: relative;
-    transition: background .4s;
-  }
-  .step.is-on { background: var(--surface-2); }
-  .step__no {
-    font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.1em;
-    color: var(--muted); display: flex; align-items: center; gap: 0.6rem;
-  }
-  .step__node {
-    width: 10px; height: 10px; border-radius: 50%;
-    background: var(--surface-2); border: 1px solid var(--enlupa-blue);
-    transition: background .4s, box-shadow .4s, transform .4s;
-  }
-  .step.is-on .step__node { background: var(--enlupa-azure); box-shadow: 0 0 14px var(--glow); transform: scale(1.25); }
-  .step.is-on .step__no { color: var(--enlupa-azure); }
-  .step h3 { font-family: var(--font-display); font-weight: 700; font-size: 1.35rem; margin: 0.2rem 0 0; letter-spacing: -0.01em; }
-  .step p { color: var(--muted); margin: 0; font-size: 0.98rem; }
-
-  /* ============================================================
-     STATIONEN — Bento-Karten + abstraktes Netz-Diagramm
-     ============================================================ */
-  .stations__layout { display: grid; grid-template-columns: 1fr; gap: 1px; margin-top: clamp(2.2rem, 5vw, 3.5rem);
-    background: var(--hairline); border: 1px solid var(--hairline); border-radius: var(--radius); overflow: hidden; }
-  @media (min-width: 940px) { .stations__layout { grid-template-columns: 1.05fr 0.95fr; } }
-
-  .st-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--hairline); }
-  .st-card {
-    background: var(--surface); padding: clamp(1.2rem, 2.6vw, 1.8rem);
-    min-height: 150px; display: flex; flex-direction: column; justify-content: space-between; gap: 0.8rem;
-    position: relative; transition: background .3s;
-  }
-  .st-card:hover { background: var(--surface-2); }
-  .st-card__top { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
-  .st-card__pin {
-    width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center;
-    background: var(--glow-soft); border: 1px solid var(--hairline);
-  }
-  .st-card__pin svg { width: 15px; height: 15px; }
-  .st-card__idx { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); letter-spacing: .12em; }
-  .st-card h3 { font-family: var(--font-display); font-weight: 700; font-size: 1.28rem; margin: 0; letter-spacing: -0.01em; }
-  .st-card__meta { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--enlupa-azure); }
-  .st-card p { color: var(--muted); font-size: 0.9rem; margin: 0; line-height: 1.5; }
-
-  .st-map { background: var(--surface); padding: clamp(1.4rem, 3vw, 2rem); display: flex; flex-direction: column; }
-  .st-map__head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
-  .st-map__title { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
-  .st-net { width: 100%; height: auto; flex: 1; }
-  .st-net .link { stroke: var(--hairline); stroke-width: 1; }
-  .st-net .link.live { stroke: var(--enlupa-blue); stroke-opacity: .55; }
-  .st-net .node { fill: var(--enlupa-azure); filter: drop-shadow(0 0 6px var(--glow)); }
-  .st-net .node-ring { fill: none; stroke: var(--enlupa-azure); stroke-opacity: .5; }
-  .st-net .node-lbl { fill: var(--text); font-family: var(--font-mono); font-size: 9px; letter-spacing: .04em; }
-  .st-net .muni { fill: none; stroke: var(--hairline-2); stroke-width: 1; }
-  .st-net .muni-lbl { fill: var(--muted); font-family: var(--font-mono); font-size: 7px; letter-spacing: .18em; }
-  .st-note { margin-top: 1rem; font-size: 0.82rem; color: var(--muted); }
-  .st-note a { color: var(--enlupa-azure); text-decoration: underline; text-underline-offset: 3px; }
-
-  /* Bargeldlos-Streifen */
-  .pay-strip {
-    margin-top: 1px; background: var(--surface); border: 1px solid var(--hairline); border-top: none;
-    border-radius: 0 0 var(--radius) var(--radius);
-    display: flex; align-items: center; gap: 1rem 1.4rem; flex-wrap: wrap;
-    padding: clamp(1rem, 2.5vw, 1.4rem) clamp(1.2rem, 3vw, 2rem);
-  }
-  .pay-strip__lbl { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
-  .pay-pill {
-    font-size: 0.86rem; color: var(--text); padding: 7px 14px; border-radius: 999px;
-    border: 1px solid var(--hairline); background: rgba(255,255,255,.02);
-  }
-
-  /* ============================================================
-     WARUM ENLUPA — asymmetrisches Bento
-     ============================================================ */
-  .why-grid {
-    margin-top: clamp(2.2rem, 5vw, 3.5rem);
-    display: grid; grid-template-columns: 1fr; gap: 1px;
-    background: var(--hairline); border: 1px solid var(--hairline); border-radius: var(--radius); overflow: hidden;
-  }
-  @media (min-width: 760px) { .why-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (min-width: 1040px) { .why-grid { grid-template-columns: repeat(12, 1fr); } }
-  .why {
-    background: var(--surface); padding: clamp(1.5rem, 3vw, 2.2rem);
-    display: flex; flex-direction: column; gap: 0.6rem; min-height: 190px;
-    transition: background .3s;
-  }
-  .why:hover { background: var(--surface-2); }
-  .why__mark { width: 30px; height: 30px; color: var(--enlupa-azure); filter: drop-shadow(0 0 8px var(--glow)); }
-  .why h3 { font-family: var(--font-display); font-weight: 700; font-size: 1.32rem; margin: 0.4rem 0 0; letter-spacing: -0.01em; }
-  .why p { color: var(--muted); margin: 0; font-size: 0.96rem; }
-  @media (min-width: 1040px) {
-    .why--a { grid-column: span 7; }
-    .why--b { grid-column: span 5; }
-    .why--c { grid-column: span 5; }
-    .why--d { grid-column: span 7; }
-  }
-  .why--a { justify-content: space-between; }
-  .why--a .why__big {
-    font-family: var(--font-display); font-weight: 800; letter-spacing: -0.02em;
-    font-size: clamp(1.6rem, 1.1rem + 2.4vw, 2.5rem); line-height: 1.05; margin: 0.6rem 0 0;
-  }
-  .why--a .why__big em { color: var(--enlupa-azure); font-style: normal; text-shadow: 0 0 24px var(--glow); }
-
-  /* ============================================================
-     FAQ
-     ============================================================ */
-  .faq { margin-top: clamp(2rem, 5vw, 3rem); border-top: 1px solid var(--hairline); }
-  .faq details {
-    border-bottom: 1px solid var(--hairline);
-  }
-  .faq summary {
-    list-style: none; cursor: pointer; padding: clamp(1.1rem, 2.6vw, 1.6rem) 0;
-    display: flex; align-items: center; justify-content: space-between; gap: 1.2rem;
-    font-family: var(--font-display); font-weight: 700; letter-spacing: -0.01em;
-    font-size: clamp(1.1rem, 1rem + 0.6vw, 1.4rem);
-  }
-  .faq summary::-webkit-details-marker { display: none; }
-  .faq summary .plus {
-    flex: 0 0 auto; width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--hairline);
-    display: grid; place-items: center; position: relative; transition: border-color .25s, background .25s;
-  }
-  .faq summary .plus::before, .faq summary .plus::after {
-    content: ""; position: absolute; background: var(--enlupa-azure);
-    transition: transform .28s ease;
-  }
-  .faq summary .plus::before { width: 12px; height: 2px; }
-  .faq summary .plus::after { width: 2px; height: 12px; }
-  .faq details[open] summary .plus { background: var(--glow-soft); border-color: var(--enlupa-azure); }
-  .faq details[open] summary .plus::after { transform: rotate(90deg); opacity: 0; }
-  .faq__a { overflow: hidden; color: var(--muted); }
-  .faq__a p { margin: 0 0 clamp(1.1rem, 2.6vw, 1.5rem); max-width: 62ch; }
-  .faq__a a { color: var(--enlupa-azure); text-decoration: underline; text-underline-offset: 3px; }
-
-  /* ============================================================
-     FOOTER
-     ============================================================ */
-  .foot { border-top: 1px solid var(--hairline); background: linear-gradient(180deg, transparent, rgba(47,128,237,.05)); }
-  .foot__cta { padding-block: clamp(3.5rem, 9vw, 6rem); text-align: center; }
-  .foot__cta .kicker { font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.24em; text-transform: uppercase; color: var(--enlupa-azure); }
-  .foot__cta h2 { font-family: var(--font-display); font-weight: 800; letter-spacing: -0.025em;
-    font-size: clamp(2.2rem, 1.4rem + 4.4vw, 4.6rem); margin: 1rem 0 1.8rem; line-height: 1; }
-  .foot__cta h2 span { color: var(--enlupa-azure); text-shadow: 0 0 34px var(--glow); }
-  .foot__links {
-    border-top: 1px solid var(--hairline); padding-block: 2rem;
-    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.2rem;
-  }
-  .foot__brand { display: inline-flex; align-items: center; gap: 0.6rem; }
-  .foot__brand svg { width: 22px; height: 22px; filter: drop-shadow(0 0 8px var(--glow)); }
-  .foot__brand b { font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; letter-spacing: -0.02em; }
-  .foot__nav { display: flex; flex-wrap: wrap; gap: 1.2rem 1.6rem; }
-  .foot__nav a { color: var(--muted); font-size: 0.92rem; }
-  .foot__nav a:hover { color: var(--text); }
-
-  /* Kaiserstuhl-Credit — einzige zweite Stelle mit Navy/Gold */
-  .credit { color: var(--muted); font-size: 0.82rem; }
-  .credit a { color: var(--gold); text-decoration: underline; text-underline-offset: 3px; }
-
-  /* ============================================================
-     IMPRESSUM (als Demo gekennzeichnet)
-     ============================================================ */
-  .imprint { background: var(--surface); border-top: 1px solid var(--hairline); }
-  .imprint__inner { padding-block: clamp(3rem, 7vw, 5rem); display: grid; gap: 1.6rem; grid-template-columns: 1fr; }
-  @media (min-width: 820px) { .imprint__inner { grid-template-columns: 0.8fr 1.2fr; gap: 3rem; } }
-  .imprint__tag {
-    display: inline-flex; align-items: center; gap: 0.5rem; align-self: start;
-    font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--muted); border: 1px solid var(--hairline); border-radius: 999px; padding: 6px 12px;
-  }
-  .imprint h2 { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.2rem); margin: 0 0 0.4rem; letter-spacing: -0.02em; }
-  .imprint p { color: var(--muted); margin: 0 0 1rem; max-width: 62ch; }
-  .imprint dl { margin: 0; display: grid; grid-template-columns: 1fr; gap: 0.3rem 1rem; }
-  .imprint dt { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-top: 0.8rem; }
-  .imprint dd { margin: 0; color: var(--text); }
-  .imprint a { color: var(--enlupa-azure); }
-
-  /* ============================================================
-     FIXED DEMO-BADGE (Navy/Gold) — verlinkt Kaiserstuhl Digital
-     ============================================================ */
-  .demo-badge {
-    position: fixed; left: 14px; bottom: 14px; z-index: 70;
-    display: inline-flex; align-items: center; gap: 0.55rem;
-    background: var(--navy); color: var(--gold);
-    border: 1px solid rgba(201,168,76,.4);
-    border-radius: 999px; padding: 8px 14px;
-    font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.06em;
-    box-shadow: 0 10px 30px -10px rgba(0,0,0,.7);
-    transition: transform .2s, box-shadow .2s;
-  }
-  .demo-badge:hover { transform: translateY(-2px); box-shadow: 0 16px 36px -10px rgba(0,0,0,.8); }
-  .demo-badge__dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 8px rgba(201,168,76,.8); }
-  .demo-badge b { color: #fff; font-weight: 600; }
-  @media (max-width: 460px) {
-    .demo-badge { font-size: 0.66rem; padding: 7px 11px; left: 10px; bottom: 10px; }
-    .demo-badge__long { display: none; }
-  }
-
-  /* Reveal-Grundzustand: ohne JS voll sichtbar (Progressive Enhancement) */
-  .reveal { will-change: transform, opacity; }
-
-  @media (prefers-reduced-motion: reduce) {
-    .btn, .st-card, .why, .step { transition: none; }
-  }
-</style>
 </head>
-
-<body>
-
-<!-- ══════════════════════════════════════════════════════════════ NAV -->
-<div class="charge-track" aria-hidden="true"><div class="charge-track__fill" id="pageFill"></div></div>
+<body data-page="home">
 
 <header class="nav">
   <div class="wrap nav-inner">
-    <a class="brand" href="#top" aria-label="Enlupa — zum Seitenanfang">
-      <svg class="brand__bolt" viewBox="0 0 24 24" aria-hidden="true">
-        <polygon points="13 2 4.5 13.5 11 13.5 10 22 19.5 10.5 13 10.5 13 2"
-                 fill="none" stroke="#5AA9FF" stroke-width="1.4" stroke-linejoin="round"/>
-        <polygon points="13 2 4.5 13.5 11 13.5 10 22 19.5 10.5 13 10.5 13 2" fill="#2F80ED" fill-opacity=".22"/>
+    <a class="brand" href="index.html" aria-label="Enlupa — zur Startseite">
+      <svg class="brand__mark" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="12" style="fill:var(--enlupa-blue)"/>
+        <path d="M13 4 5 13.5h5.2L9 20l8-9.5h-5.2L13 4z" fill="#fff"/>
       </svg>
       <span class="brand__word">Enlupa</span>
-      <span class="brand__charge" id="navCharge" aria-hidden="true">⚡ 0%</span>
     </a>
     <nav class="nav-links" aria-label="Hauptnavigation">
-      <a class="nav-hide-sm" href="#ablauf">So geht's</a>
-      <a class="nav-hide-sm" href="#stationen">Stationen</a>
+      <a data-nav="home" href="index.html">Start</a>
+      <a data-nav="werbung" href="werbung-standort.html">Werbung &amp; Standort</a>
+      <a data-nav="partner" href="partner-werden.html">Partner werden</a>
+      <a data-nav="ueber-uns" href="ueber-uns.html">Über uns</a>
       <a class="nav-ig" href="https://www.instagram.com/enlupa.official" target="_blank" rel="noopener">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" stroke="none"/>
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" stroke="none"/></svg>
         Instagram
       </a>
     </nav>
+    <button class="nav-burger" id="navBurger" aria-label="Menü öffnen" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
+  <nav class="nav-mobile" id="navMobile" aria-label="Mobile Navigation">
+    <a data-nav="home" href="index.html">Start</a>
+    <a data-nav="werbung" href="werbung-standort.html">Werbung &amp; Standort</a>
+    <a data-nav="partner" href="partner-werden.html">Partner werden</a>
+    <a data-nav="ueber-uns" href="ueber-uns.html">Über uns</a>
+    <a href="https://www.instagram.com/enlupa.official" target="_blank" rel="noopener">Instagram</a>
+  </nav>
 </header>
 
 <main id="top">
 
-  <!-- ═══════════════════════════════════════════════════════════ HERO -->
+  <!-- HERO -->
   <section class="hero" aria-labelledby="hero-h1">
     <div class="wrap">
-      <p class="cycle reveal" aria-hidden="true">
-        <span class="cycle__word" data-cy>Rent</span><span class="cycle__sep">/</span>
-        <span class="cycle__word" data-cy>Charge</span><span class="cycle__sep">/</span>
-        <span class="cycle__word" data-cy>Return</span>
-        <span class="cycle__keep">— keep moving.</span>
-      </p>
-      <h1 id="hero-h1" class="display reveal">
-        <span class="hl">Nie wieder mit <span class="spark">leerem&nbsp;Akku</span></span>
-        <span class="hl">durch Freiburg.</span>
-      </h1>
+      <span class="eyebrow reveal">Enlupa · Freiburg</span>
       <div class="hero__lower">
         <div class="hero__copy">
-        <p class="lead hero__sub reveal">
-          Leih dir an einer Station eine Powerbank, lad unterwegs auf und gib
-          sie an jeder anderen Station in der Stadt wieder zurück.
-        </p>
-        <div class="cta-row reveal">
-          <a class="btn btn--primary" href="#stationen">
-            Nächste Station finden
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 3v18M12 21l7-7M12 21l-7-7"/></svg>
-          </a>
-          <a class="btn btn--ghost" href="https://www.instagram.com/enlupa.official" target="_blank" rel="noopener">
-            Auf Instagram folgen
-          </a>
+          <h1 id="hero-h1" class="display reveal">Leihen. Laden.<br><span class="spark">Überall zurückgeben.</span></h1>
+          <p class="lead hero__sub reveal">
+            Enlupa ist eine mobile Powerbank-Station, die es Menschen ermöglicht, ihr Smartphone
+            einfach, schnell und flexibel überall und jederzeit zu laden. Besucher können eine
+            Powerbank ausleihen, unterwegs laden und an jeder Enlupa-Station wieder zurückgeben.
+          </p>
+          <div class="cta-row reveal">
+            <a class="btn btn--primary" href="#standorte">Stationen in Freiburg</a>
+            <a class="btn btn--ghost" href="werbung-standort.html">Partner werden</a>
+          </div>
         </div>
-        <p class="hero__pay reveal">
-          <span class="dot" aria-hidden="true"></span>
-          Bezahlen bargeldlos — <b>Apple&nbsp;Pay</b>, <b>Google&nbsp;Pay</b>, <b>PayPal</b> oder <b>Karte</b>.
-        </p>
-      </div>
-
-      <!-- ASSET-SLOT: Enlupa Powerbank / Logo — hier später echter Marken-Blitz, Powerbank- oder Logo-Render statt des Interims-CSS/SVG-Bolts -->
-      <div class="hero__art reveal" aria-hidden="true">
-        <div class="bolt-stage">
-          <div class="bolt-halo"></div>
-          <svg class="hero-bolt" viewBox="0 0 120 160" preserveAspectRatio="xMidYMid meet">
-            <defs>
-              <linearGradient id="boltGrad" x1="0" y1="1" x2="0" y2="0">
-                <stop offset="0" stop-color="#2F80ED"/>
-                <stop offset="1" stop-color="#5AA9FF"/>
-              </linearGradient>
-              <clipPath id="boltClip">
-                <path d="M74 6 26 90 h30 l-14 64 60 -92 h-32 z"/>
-              </clipPath>
-            </defs>
-            <!-- dimmer Grundkörper -->
-            <path class="bolt-base" d="M74 6 26 90 h30 l-14 64 60 -92 h-32 z"/>
-            <!-- Ladefüllung, von unten nach oben (per Scroll gesteuert) -->
-            <g clip-path="url(#boltClip)">
-              <rect class="bolt-fill" id="boltFill" x="0" y="0" width="120" height="160"/>
-            </g>
-            <!-- Kontur -->
-            <path class="bolt-stroke" d="M74 6 26 90 h30 l-14 64 60 -92 h-32 z"/>
-          </svg>
-          <span class="bolt-readout" id="boltReadout">0%</span>
+        <div class="hero__art reveal" aria-hidden="true">
+          <div class="hero__art-halo"></div>
+          <img src="assets/img/product/station-device.png" alt="" width="753" height="753" loading="eager">
         </div>
-      </div>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════════ SO FUNKTIONIERT'S -->
+  <!-- WAS IST ENLUPA / ZIEL -->
+  <section class="section-pad rule-top" aria-labelledby="was-h2">
+    <div class="wrap">
+      <div class="heads reveal">
+        <span class="eyebrow">Was ist Enlupa</span>
+        <h2 id="was-h2" class="display">Was ist Enlupa?</h2>
+      </div>
+      <div class="about-grid reveal">
+        <div class="about-grid__cell">
+          <p>
+            Enlupa ist eine mobile Powerbank-Station, die es Menschen ermöglicht, ihr Smartphone
+            einfach, schnell und flexibel überall und jederzeit zu laden.
+          </p>
+          <p>
+            Besucher können eine Powerbank ausleihen, unterwegs laden und an jeder Enlupa-Station
+            wieder zurückgeben.
+          </p>
+        </div>
+        <div class="about-grid__cell about-grid__goal">
+          <span class="eyebrow">Unser Ziel</span>
+          <p>Mehr Freiheit für Menschen unterwegs und ein besseres Erlebnis bei deinem Besuch.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SO FUNKTIONIERT'S -->
   <section id="ablauf" class="section-pad rule-top" aria-labelledby="ablauf-h2">
     <div class="wrap">
       <div class="heads reveal">
         <span class="eyebrow">So funktioniert's</span>
-        <h2 id="ablauf-h2" class="display">Drei Schritte bis zum vollen Akku.</h2>
-        <p>Kein Konto anlegen, kein Papierkram. Powerbank ziehen, laden, an der nächsten Station wieder abstellen.</p>
+        <h2 id="ablauf-h2" class="display">Vier Schritte bis zum vollen Akku.</h2>
       </div>
-
-      <!-- ASSET-SLOT: Enlupa Station — hier später Render/Foto der Ladestation neben den 3 Schritten -->
       <div class="steps">
-        <div class="steps__bar" aria-hidden="true"><div class="steps__fill" id="stepsFill"></div></div>
         <div class="steps__grid">
           <article class="step reveal" data-step="0">
-            <span class="step__no"><span class="step__node"></span>01 · Finden</span>
-            <h3>Station finden</h3>
-            <p>Halt an einer der Locations Ausschau nach der Enlupa-Station — oder schau vorher aufs Netz weiter unten.</p>
+            <span class="step__no"><span class="step__node"></span>01</span>
+            <h3>Karte dranhalten</h3>
+            <p>Einfach deine Karte an das Lesegerät halten.</p>
           </article>
           <article class="step reveal" data-step="1">
-            <span class="step__no"><span class="step__node"></span>02 · Mieten</span>
-            <h3>Powerbank mieten</h3>
-            <p>Powerbank aus der Station ziehen und direkt loslegen. Bezahlt wird bargeldlos — mit dem Handy oder der Karte.</p>
+            <span class="step__no"><span class="step__node"></span>02</span>
+            <h3>Powerbank entnehmen</h3>
+            <p>Die Powerbank wird automatisch entriegelt und kann direkt entnommen werden.</p>
           </article>
           <article class="step reveal" data-step="2">
-            <span class="step__no"><span class="step__node"></span>03 · Zurückgeben</span>
-            <h3>Später zurückgeben</h3>
-            <p>Stell die Powerbank an jeder Enlupa-Station wieder ab. Egal wo in Freiburg — nicht nur da, wo du sie geholt hast.</p>
+            <span class="step__no"><span class="step__node"></span>03</span>
+            <h3>Überall laden</h3>
+            <p>Unterwegs das Smartphone flexibel und bequem aufladen.</p>
+          </article>
+          <article class="step reveal" data-step="3">
+            <span class="step__no"><span class="step__node"></span>04</span>
+            <h3>Zurückgeben</h3>
+            <p>Einfach wieder an der Station zurückstecken oder an einem anderen Automaten im Enlupa-System zurückgeben.</p>
           </article>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════════════════ STATIONEN -->
-  <section id="stationen" class="section-pad rule-top" aria-labelledby="stationen-h2">
+  <!-- PREISE -->
+  <section id="preise" class="section-pad rule-top" aria-labelledby="preise-h2">
     <div class="wrap">
       <div class="heads reveal">
-        <span class="eyebrow">Stationen in Freiburg</span>
-        <h2 id="stationen-h2" class="display">Vier Stationen mitten in der Altstadt.</h2>
-        <p>Geholt an der einen, abgegeben an der nächsten. Alle vier sind Teil desselben Netzes.</p>
+        <span class="eyebrow">Preise fürs Ausleihen</span>
+        <h2 id="preise-h2" class="display">Was das Ausleihen kostet.</h2>
       </div>
-
-      <div class="stations__layout reveal">
-        <div class="st-cards">
-          <article class="st-card">
-            <div class="st-card__top">
-              <span class="st-card__pin" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#5AA9FF" stroke-width="2"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg></span>
-              <span class="st-card__idx">01</span>
-            </div>
-            <div>
-              <span class="st-card__meta">Altstadt · Freiburg</span>
-              <h3>Puzzles</h3>
-            </div>
-            <p>Powerbank ziehen, Handy laden, weiter geht's.</p>
-          </article>
-          <article class="st-card">
-            <div class="st-card__top">
-              <span class="st-card__pin" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#5AA9FF" stroke-width="2"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg></span>
-              <span class="st-card__idx">02</span>
-            </div>
-            <div>
-              <span class="st-card__meta">Altstadt · Freiburg</span>
-              <h3>Café Movie</h3>
-            </div>
-            <p>Leih hier und gib sie woanders wieder ab.</p>
-          </article>
-          <article class="st-card">
-            <div class="st-card__top">
-              <span class="st-card__pin" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#5AA9FF" stroke-width="2"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg></span>
-              <span class="st-card__idx">03</span>
-            </div>
-            <div>
-              <span class="st-card__meta">Altstadt · Freiburg</span>
-              <h3>Bächle Keller</h3>
-            </div>
-            <p>Griffbereit, wenn der Akku schwächelt.</p>
-          </article>
-          <article class="st-card">
-            <div class="st-card__top">
-              <span class="st-card__pin" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#5AA9FF" stroke-width="2"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg></span>
-              <span class="st-card__idx">04</span>
-            </div>
-            <div>
-              <span class="st-card__meta">Altstadt · Freiburg</span>
-              <h3>Bertolds</h3>
-            </div>
-            <p>Eine von vier Stationen im Netz.</p>
-          </article>
+      <div class="price-grid reveal">
+        <div class="price-tile">
+          <div class="price-tile__val">22&nbsp;€</div>
+          <div class="price-tile__lbl">Kaution</div>
         </div>
+        <div class="price-tile">
+          <div class="price-tile__val">2&nbsp;€</div>
+          <div class="price-tile__lbl">pro Stunde</div>
+        </div>
+        <div class="price-tile">
+          <div class="price-tile__val">8&nbsp;€</div>
+          <div class="price-tile__lbl">max. pro Tag</div>
+        </div>
+        <div class="price-tile">
+          <div class="price-tile__val">3&nbsp;Tage</div>
+          <div class="price-tile__lbl">maximale Leihdauer (72&nbsp;Std.)</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        <!-- ASSET-SLOT: Enlupa Station / Karte — echte, aufs Blau gestylte Standortkarte ersetzt später dieses schematische Netz -->
-        <div class="st-map">
-          <div class="st-map__head">
-            <span class="st-map__title">Das Enlupa-Netz</span>
-            <span class="st-card__idx">Freiburg · Altstadt</span>
+  <!-- STANDORTE -->
+  <section id="standorte" class="section-pad rule-top" aria-labelledby="standorte-h2">
+    <div class="wrap">
+      <div class="heads reveal">
+        <span class="eyebrow">Standorte in Freiburg</span>
+        <h2 id="standorte-h2" class="display">Bereits an beliebten Freiburger Standorten.</h2>
+      </div>
+      <div class="st-grid reveal">
+        <article class="st-card">
+          <div class="st-card__photo"><img src="assets/img/standorte/cafe-movie.jpg" alt="Enlupa-Powerbank-Station bei Cafè Movie in Freiburg" width="360" height="480"></div>
+          <div class="st-card__body"><span class="st-card__idx">Freiburg</span><h3>Cafè Movie</h3></div>
+        </article>
+        <article class="st-card">
+          <div class="st-card__photo"><img src="assets/img/standorte/puzzles.jpg" alt="Enlupa-Powerbank-Station bei Puzzles in Freiburg" width="360" height="480"></div>
+          <div class="st-card__body"><span class="st-card__idx">Freiburg</span><h3>Puzzles</h3></div>
+        </article>
+        <article class="st-card">
+          <div class="st-card__photo"><img src="assets/img/standorte/baechle-keller.jpg" alt="Enlupa-Powerbank-Station im Bächle Keller in Freiburg" width="480" height="640"></div>
+          <div class="st-card__body"><span class="st-card__idx">Freiburg</span><h3>Bächle Keller</h3></div>
+        </article>
+        <article class="st-card">
+          <div class="st-card__photo"><img src="assets/img/standorte/bertolds.jpg" alt="Enlupa-Powerbank-Station bei Bertolds in Freiburg" width="450" height="600"></div>
+          <div class="st-card__body"><span class="st-card__idx">Freiburg</span><h3>Bertolds</h3></div>
+        </article>
+      </div>
+      <p class="st-note reveal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+        Weitere Standorte sind bereits in Planung. Gemeinsam bringen wir noch mehr Service nach Freiburg.
+      </p>
+    </div>
+  </section>
+
+  <!-- CTA TEASER -->
+  <section class="section-pad rule-top" aria-labelledby="cta-h2">
+    <div class="wrap">
+      <div class="about-grid reveal" style="grid-template-columns: 1fr;">
+        <div class="about-grid__cell" style="display:flex; flex-direction:column; gap:1.2rem; align-items:flex-start;">
+          <div>
+            <span class="eyebrow">Für Cafés, Bars &amp; Werbepartner</span>
+            <h2 id="cta-h2" class="display" style="font-size: clamp(1.6rem, 1.2rem + 2vw, 2.4rem); margin-top: 0.8rem;">
+              Du hast ein Café, eine Bar oder willst bei uns werben?
+            </h2>
           </div>
-          <!-- Bewusst abstraktes Netz-Schema (keine GPS-Karte). Feinjustierung / echte Karte kommt als Asset. -->
-          <svg class="st-net" viewBox="0 0 320 230" role="img" aria-label="Schematisches Netz der vier Enlupa-Stationen in der Freiburger Altstadt">
-            <!-- angedeutete Altstadt-Kontur + Bächle-Linien -->
-            <path class="muni" d="M40 40 L280 40 L292 120 L250 200 L70 200 L28 120 Z"/>
-            <path class="muni" d="M40 118 L280 118"/>
-            <path class="muni" d="M158 40 L158 200"/>
-            <text class="muni-lbl" x="150" y="30">ALTSTADT</text>
-            <text class="muni-lbl" x="196" y="112">MÜNSTERPLATZ</text>
-
-            <!-- Verbindungen (jede Station mit jeder — überall zurückgeben) -->
-            <g id="netLinks">
-              <line class="link" x1="86" y1="78" x2="232" y2="70"></line>
-              <line class="link" x1="86" y1="78" x2="104" y2="168"></line>
-              <line class="link" x1="86" y1="78" x2="238" y2="160"></line>
-              <line class="link" x1="232" y1="70" x2="104" y2="168"></line>
-              <line class="link" x1="232" y1="70" x2="238" y2="160"></line>
-              <line class="link" x1="104" y1="168" x2="238" y2="160"></line>
-            </g>
-
-            <!-- Knoten -->
-            <g class="net-node" data-node><circle class="node-ring" cx="86" cy="78" r="11"/><circle class="node" cx="86" cy="78" r="5"/><text class="node-lbl" x="86" y="60" text-anchor="middle">Puzzles</text></g>
-            <g class="net-node" data-node><circle class="node-ring" cx="232" cy="70" r="11"/><circle class="node" cx="232" cy="70" r="5"/><text class="node-lbl" x="232" y="52" text-anchor="middle">Café Movie</text></g>
-            <g class="net-node" data-node><circle class="node-ring" cx="104" cy="168" r="11"/><circle class="node" cx="104" cy="168" r="5"/><text class="node-lbl" x="104" y="190" text-anchor="middle">Bächle Keller</text></g>
-            <g class="net-node" data-node><circle class="node-ring" cx="238" cy="160" r="11"/><circle class="node" cx="238" cy="160" r="5"/><text class="node-lbl" x="238" y="182" text-anchor="middle">Bertolds</text></g>
-          </svg>
-          <p class="st-note">Schematische Darstellung. Wo gerade Stationen stehen, siehst du immer aktuell auf <a href="https://www.instagram.com/enlupa.official" target="_blank" rel="noopener">Instagram</a>.</p>
+          <p class="lead" style="margin:0;">Werde Partner und biete deinen Gästen mehr Service — ohne Kosten für deinen Standort.</p>
+          <a class="btn btn--primary" href="werbung-standort.html">Werde Partner</a>
         </div>
-      </div>
-
-      <div class="pay-strip reveal">
-        <span class="pay-strip__lbl">Bargeldlos bezahlen</span>
-        <span class="pay-pill">Apple&nbsp;Pay</span>
-        <span class="pay-pill">Google&nbsp;Pay</span>
-        <span class="pay-pill">PayPal</span>
-        <span class="pay-pill">Karte</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════ WARUM -->
-  <section id="warum" class="section-pad rule-top" aria-labelledby="warum-h2">
-    <div class="wrap">
-      <div class="heads reveal">
-        <span class="eyebrow">Warum Enlupa</span>
-        <h2 id="warum-h2" class="display">Die ganze Altstadt ist deine Ladestation.</h2>
-      </div>
-
-      <div class="why-grid">
-        <article class="why why--a reveal">
-          <svg class="why__mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><polygon points="13 2 4.5 13.5 11 13.5 10 22 19.5 10.5 13 10.5 13 2"/></svg>
-          <p class="why__big">Unterwegs in der Stadt und der Akku macht schlapp? <em>Dafür sind die Stationen da.</em></p>
-        </article>
-        <article class="why why--b reveal">
-          <svg class="why__mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="6" width="15" height="12" rx="2"/><path d="M18 10h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2"/></svg>
-          <h3>Bargeldlos zahlen</h3>
-          <p>Apple Pay, Google Pay, PayPal oder Karte. Also das, was du eh schon dabei hast.</p>
-        </article>
-        <article class="why why--c reveal">
-          <svg class="why__mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 12a8 8 0 0 1 13.7-5.6L20 8"/><path d="M20 4v4h-4"/><path d="M20 12a8 8 0 0 1-13.7 5.6L4 16"/><path d="M4 20v-4h4"/></svg>
-          <h3>Überall zurückgeben</h3>
-          <p>Leih an der einen, gib an der nächsten Station ab. Du musst nie dahin zurücklaufen, wo du gestartet bist.</p>
-        </article>
-        <article class="why why--d reveal">
-          <svg class="why__mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M15.5 14.2c2.6.4 4.5 2.6 4.5 5.3"/></svg>
-          <h3>Teilen statt kaufen</h3>
-          <p>Eine Powerbank für viele, statt in jeder Tasche eine eigene. Weniger Elektroschrott, mehr freie Hände.</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══════════════════════════════════════════════════════════ FAQ -->
-  <section id="faq" class="section-pad rule-top" aria-labelledby="faq-h2">
-    <div class="wrap">
-      <div class="heads reveal">
-        <span class="eyebrow">Gut zu wissen</span>
-        <h2 id="faq-h2" class="display">Was du wissen willst.</h2>
-      </div>
-
-      <div class="faq reveal">
-        <details>
-          <summary>Wie leih ich eine Powerbank aus? <span class="plus" aria-hidden="true"></span></summary>
-          <div class="faq__a"><p>Du gehst zu einer Enlupa-Station, ziehst eine Powerbank heraus und zahlst bargeldlos. Mehr ist es nicht — der Akku lädt sofort.</p></div>
-        </details>
-        <details>
-          <summary>Wo geb ich sie wieder ab? <span class="plus" aria-hidden="true"></span></summary>
-          <div class="faq__a"><p>An jeder Enlupa-Station in Freiburg. Egal, wo du sie geholt hast — Hauptsache, sie kommt zurück ins Netz.</p></div>
-        </details>
-        <details>
-          <summary>Wo finde ich die Stationen? <span class="plus" aria-hidden="true"></span></summary>
-          <div class="faq__a"><p>Aktuell an vier Spots in der Altstadt: Puzzles, Café Movie, Bächle Keller und Bertolds. Wo gerade welche stehen, siehst du immer auf <a href="https://www.instagram.com/enlupa.official" target="_blank" rel="noopener">Instagram</a>.</p></div>
-        </details>
-        <details>
-          <summary>Was kostet das? <span class="plus" aria-hidden="true"></span></summary>
-          <div class="faq__a"><p>Die aktuellen Konditionen erfährst du direkt an der Station oder per DM auf <a href="https://www.instagram.com/enlupa.official" target="_blank" rel="noopener">Instagram</a>.</p></div>
-        </details>
-        <details>
-          <summary>Wie zahle ich? <span class="plus" aria-hidden="true"></span></summary>
-          <div class="faq__a"><p>Komplett bargeldlos: Apple Pay, Google Pay, PayPal oder Karte.</p></div>
-        </details>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══════════════════════════════════════════════════════════ FOOTER -->
-  <footer class="foot">
-    <div class="wrap">
-      <div class="foot__cta reveal">
-        <span class="kicker">Low battery? No problem.</span>
-        <h2 class="display">Rent. Charge. Return.<br><span>Keep&nbsp;moving.</span></h2>
-        <a class="btn btn--primary" href="https://www.instagram.com/enlupa.official" target="_blank" rel="noopener">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" stroke="none"/></svg>
-          @enlupa.official folgen
-        </a>
-      </div>
-
-      <div class="foot__links">
-        <span class="foot__brand">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="13 2 4.5 13.5 11 13.5 10 22 19.5 10.5 13 10.5 13 2" fill="none" stroke="#5AA9FF" stroke-width="1.4" stroke-linejoin="round"/></svg>
-          <b>Enlupa</b>
-        </span>
-        <nav class="foot__nav" aria-label="Footer">
-          <a href="#ablauf">So geht's</a>
-          <a href="#stationen">Stationen</a>
-          <a href="#faq">FAQ</a>
-          <a href="#impressum">Impressum</a>
-          <a href="https://www.instagram.com/enlupa.official" target="_blank" rel="noopener">Instagram</a>
-        </nav>
-        <span class="credit">Demo von <a href="https://kaiserstuhl-digital.de" target="_blank" rel="noopener">Kaiserstuhl&nbsp;Digital</a></span>
-      </div>
-    </div>
-  </footer>
-
-  <!-- ══════════════════════════════════════════════════════ IMPRESSUM -->
-  <section id="impressum" class="imprint">
-    <div class="wrap imprint__inner">
-      <span class="imprint__tag"><span class="demo-badge__dot" style="background:var(--enlupa-azure);box-shadow:0 0 8px var(--glow)"></span> Impressum · Demo</span>
-      <div>
-        <h2>Diese Seite ist eine Demo.</h2>
-        <p>
-          Diese Website ist ein unverbindlicher Entwurf von Kaiserstuhl Digital für Enlupa.
-          Sie ist kein offizielles Angebot von Enlupa und dient nur zur Ansicht. Alle Inhalte
-          basieren auf öffentlich einsehbaren Angaben. Preise, Konditionen und Kontakt bitte
-          direkt bei Enlupa erfragen.
-        </p>
-        <dl>
-          <dt>Verantwortlich für diese Demo</dt>
-          <dd>Tobias Khamyod · Kaiserstuhl Digital</dd>
-          <dt>Kontakt Demo-Gestaltung</dt>
-          <dd><a href="https://kaiserstuhl-digital.de" target="_blank" rel="noopener">kaiserstuhl-digital.de</a></dd>
-          <dt>Anbieter der Powerbankvermietung</dt>
-          <dd>Enlupa — offizielle Infos &amp; Kontakt über <a href="https://www.instagram.com/enlupa.official" target="_blank" rel="noopener">Instagram @enlupa.official</a></dd>
-        </dl>
       </div>
     </div>
   </section>
 
 </main>
 
-<!-- Fixed Demo-Badge (Navy/Gold) -->
-<a class="demo-badge" href="https://kaiserstuhl-digital.de" target="_blank" rel="noopener" aria-label="Demo von Kaiserstuhl Digital — Website öffnen">
-  <span class="demo-badge__dot" aria-hidden="true"></span>
-  <span><span class="demo-badge__long">Demo von </span><b>Kaiserstuhl&nbsp;Digital</b></span>
-</a>
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot__cta reveal">
+      <span class="kicker">Akku leer? Kein Problem.</span>
+      <h2 class="display">Leihen. Laden.<br><span>Überall zurückgeben.</span></h2>
+      <a class="btn btn--primary" href="https://www.instagram.com/enlupa.official" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" stroke="none"/></svg>
+        @enlupa.official folgen
+      </a>
+    </div>
+    <div class="foot__links">
+      <span class="foot__brand">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" style="fill:var(--enlupa-blue)"/><path d="M13 4 5 13.5h5.2L9 20l8-9.5h-5.2L13 4z" fill="#fff"/></svg>
+        <b>Enlupa</b>
+      </span>
+      <nav class="foot__nav" aria-label="Footer">
+        <a href="werbung-standort.html">Werbung &amp; Standort</a>
+        <a href="partner-werden.html">Partner werden</a>
+        <a href="ueber-uns.html">Über uns</a>
+        <a href="mailto:luis.bockstahler@enlupa.de">Kontakt</a>
+        <a href="https://www.instagram.com/enlupa.official" target="_blank" rel="noopener">Instagram</a>
+        <a href="impressum.html">Impressum</a>
+      </nav>
+    </div>
+    <div class="foot__bottom">
+      <span class="credit">Website von <a href="https://kaiserstuhl-digital.de" target="_blank" rel="noopener">Kaiserstuhl&nbsp;Digital</a></span>
+    </div>
+  </div>
+</footer>
 
-<!-- ═══════════════════════════════════════════════════════════ SCRIPTS -->
-<!-- Nur GSAP + ScrollTrigger (CDN). Fällt alles graziös aus, wenn nicht geladen. -->
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
-<script defer>
-  window.addEventListener("DOMContentLoaded", function () {
-    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    var pageFill = document.getElementById("pageFill");
-    var navCharge = document.getElementById("navCharge");
-    var boltFill = document.getElementById("boltFill");
-    var boltReadout = document.getElementById("boltReadout");
-
-    // ---- Globaler Ladebalken + Nav-% (immer aktiv, sehr günstig) ----
-    var ticking = false;
-    function onScroll() {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(function () {
-        var doc = document.documentElement;
-        var se = document.scrollingElement || doc;
-        var max = doc.scrollHeight - doc.clientHeight;
-        var top = se.scrollTop || window.pageYOffset || 0;
-        var p = max > 0 ? Math.min(1, top / max) : 0;
-        var pct = Math.round(p * 100);
-        if (pageFill) pageFill.style.width = pct + "%";
-        if (navCharge) navCharge.textContent = "⚡ " + pct + "%";
-        ticking = false;
-      });
-    }
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-
-    // Hero-Bolt: Standard voll (falls kein GSAP) — sieht bewusst geladen aus.
-    function setBolt(p) {
-      if (!boltFill) return;
-      var full = 160;
-      boltFill.setAttribute("y", (full * (1 - p)).toFixed(1));
-      if (boltReadout) boltReadout.textContent = Math.round(p * 100) + "%";
-    }
-    setBolt(1);
-
-    var g = window.gsap, ST = window.ScrollTrigger;
-
-    if (!g || !ST || reduce) {
-      // Reduced Motion / kein GSAP: alles im Endzustand zeigen.
-      document.querySelectorAll(".step").forEach(function (s) { s.classList.add("is-on"); });
-      var sf = document.getElementById("stepsFill"); if (sf) sf.style.width = "100%";
-      document.querySelectorAll("#netLinks .link").forEach(function (l) { l.classList.add("live"); });
-      setBolt(1);
-      return;
-    }
-
-    g.registerPlugin(ST);
-
-    // ---- Sanfte Reveals ----
-    g.utils.toArray(".reveal").forEach(function (el) {
-      g.from(el, {
-        y: 26, opacity: 0, duration: 0.85, ease: "power3.out",
-        scrollTrigger: { trigger: el, start: "top 88%", once: true }
-      });
-    });
-
-    // ---- Hero-Wortzyklus Rent -> Charge -> Return (Ladetakt) ----
-    var words = document.querySelectorAll("[data-cy]");
-    if (words.length) {
-      var tl = g.timeline({ repeat: -1, repeatDelay: 0.7 });
-      words.forEach(function (w) {
-        tl.to(w, { duration: 0.35, onStart: function () { w.classList.add("is-on"); },
-                   onReverseComplete: function () { w.classList.remove("is-on"); } })
-          .to(w, { duration: 0.55 })
-          .to(w, { duration: 0.3, onStart: function () { w.classList.remove("is-on"); } });
-      });
-    }
-
-    // ---- Hero-Bolt lädt beim Scrollen durch den Hero ----
-    setBolt(0);
-    ST.create({
-      trigger: ".hero",
-      start: "top top",
-      end: "bottom top",
-      scrub: 0.5,
-      onUpdate: function (self) { setBolt(0.12 + self.progress * 0.88); },
-      onRefresh: function (self) { setBolt(0.12 + self.progress * 0.88); }
-    });
-
-    // ---- Ladeanzeige der 3 Schritte ----
-    var stepsFill = document.getElementById("stepsFill");
-    var stepEls = g.utils.toArray(".step");
-    var links = g.utils.toArray("#netLinks .link");
-    ST.create({
-      trigger: ".steps",
-      start: "top 72%",
-      end: "bottom 60%",
-      scrub: 0.6,
-      onUpdate: function (self) {
-        var p = self.progress;
-        if (stepsFill) stepsFill.style.width = (p * 100).toFixed(1) + "%";
-        stepEls.forEach(function (el, i) {
-          el.classList.toggle("is-on", p >= (i / stepEls.length) + 0.02);
-        });
-      }
-    });
-
-    // ---- Netz-Diagramm: Linien „gehen an", wenn sichtbar ----
-    ST.create({
-      trigger: ".st-net",
-      start: "top 78%",
-      once: true,
-      onEnter: function () {
-        links.forEach(function (l, i) {
-          g.to(l, { duration: 0.5, delay: i * 0.12, onStart: function () { l.classList.add("live"); } });
-        });
-      }
-    });
-  });
-</script>
-
+<script src="assets/js/site.js" defer></script>
 </body>
 </html>
