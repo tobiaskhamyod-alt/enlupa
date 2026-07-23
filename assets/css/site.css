@@ -194,7 +194,7 @@ section { position: relative; }
 .hero__sub { margin: 0 0 2rem; }
 
 .hero__art { position: relative; display: grid; place-items: center; min-height: 260px; }
-.hero__art img { width: min(72vw, 340px); filter: drop-shadow(0 18px 50px rgba(27,130,216,.28)); }
+.hero__art img { width: min(72vw, 340px); height: auto; filter: drop-shadow(0 18px 50px rgba(27,130,216,.28)); }
 .hero__art-halo {
   position: absolute; inset: 6% 10%;
   background: radial-gradient(closest-side, var(--glow), transparent 72%);
