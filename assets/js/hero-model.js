@@ -34,15 +34,17 @@
     var hero = document.querySelector(".hero");
     if (!hero) return;
     var ticking = false;
+    var BASE_THETA = 260; // Blickwinkel, der die Enlupa-Beschriftung zeigt
 
+    // Fortschritt 0 beim Laden (Hero ganz oben), 1 sobald der Hero komplett
+    // nach oben aus dem Viewport gescrollt ist — eine volle Drehung pro Hero-Höhe,
+    // beginnend beim markenseitigen Blickwinkel statt bei 0°.
     function update() {
       ticking = false;
       var rect = hero.getBoundingClientRect();
-      var vh = window.innerHeight || document.documentElement.clientHeight;
-      var total = rect.height + vh;
-      var passed = vh - rect.top;
-      var progress = Math.min(1, Math.max(0, passed / total));
-      model.cameraOrbit = (progress * 360).toFixed(1) + "deg 75deg 105%";
+      var progress = Math.min(1, Math.max(0, -rect.top / rect.height));
+      var theta = (BASE_THETA + progress * 360) % 360;
+      model.cameraOrbit = theta.toFixed(1) + "deg 80deg 105%";
     }
 
     window.addEventListener("scroll", function () {
