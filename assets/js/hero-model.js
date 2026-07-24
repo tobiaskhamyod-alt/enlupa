@@ -18,15 +18,27 @@
   var model = document.getElementById("heroModel");
   if (!img || !model) return;
 
+  // Sofort umschalten, sobald feststeht, dass das 3D-Modell zum Einsatz
+  // kommt — nicht erst warten, bis Skript + GLB fertig geladen sind. Sonst
+  // blitzt kurz das alte Stationsbild auf, bevor das Modell erscheint.
+  img.style.display = "none";
+  model.style.display = "block";
+
   var script = document.createElement("script");
   script.type = "module";
   script.src = "assets/js/vendor/model-viewer.min.js";
   script.onload = function () {
     customElements.whenDefined("model-viewer").then(function () {
-      img.style.display = "none";
-      model.style.display = "block";
       setupScrollRotation();
-    }).catch(function () {});
+    }).catch(function () {
+      // model-viewer konnte nicht initialisiert werden — auf das Bild zurückfallen.
+      img.style.display = "";
+      model.style.display = "none";
+    });
+  };
+  script.onerror = function () {
+    img.style.display = "";
+    model.style.display = "none";
   };
   document.head.appendChild(script);
 
