@@ -79,7 +79,10 @@
         </div>
         <div class="hero__art reveal" aria-hidden="true">
           <div class="hero__art-halo"></div>
-          <img src="assets/img/product/station-device.png" alt="" width="900" height="900" loading="eager">
+          <img id="heroFallbackImg" src="assets/img/product/station-device.png" alt="" width="900" height="900" loading="eager">
+          <model-viewer id="heroModel" class="hero__model" src="assets/models/powerbank-placeholder.glb"
+            camera-orbit="0deg 75deg 105%" field-of-view="30deg" exposure="1" shadow-intensity="0"
+            environment-image="neutral" disable-zoom disable-tap style="display:none;"></model-viewer>
         </div>
       </div>
     </div>
@@ -95,12 +98,12 @@
       <div class="about-grid reveal">
         <div class="about-grid__cell">
           <p>
-            Enlupa ist eine mobile Powerbank-Station, die es Menschen ermöglicht, ihr Smartphone
-            einfach, schnell und flexibel überall und jederzeit zu laden.
+            Mit leerem Akku kannst du unterwegs nicht mehr per Handy bezahlen oder zum nächsten
+            Ort navigieren.
           </p>
           <p>
-            Besucher können eine Powerbank ausleihen, unterwegs laden und an jeder Enlupa-Station
-            wieder zurückgeben.
+            Deshalb stehen Enlupa-Stationen dort, wo du abends in Freiburg unterwegs bist: in
+            Cafés und Bars.
           </p>
         </div>
         <div class="about-grid__cell about-grid__goal">
@@ -154,19 +157,19 @@
       </div>
       <div class="price-grid reveal">
         <div class="price-tile">
-          <div class="price-tile__val">22&nbsp;€</div>
+          <div class="price-tile__val"><span class="price-tile__num" data-count-to="22">0</span>&nbsp;€</div>
           <div class="price-tile__lbl">Kaution</div>
         </div>
         <div class="price-tile">
-          <div class="price-tile__val">2&nbsp;€</div>
+          <div class="price-tile__val"><span class="price-tile__num" data-count-to="2">0</span>&nbsp;€</div>
           <div class="price-tile__lbl">pro Stunde</div>
         </div>
         <div class="price-tile">
-          <div class="price-tile__val">8&nbsp;€</div>
+          <div class="price-tile__val"><span class="price-tile__num" data-count-to="8">0</span>&nbsp;€</div>
           <div class="price-tile__lbl">max. pro Tag</div>
         </div>
         <div class="price-tile">
-          <div class="price-tile__val">3&nbsp;Tage</div>
+          <div class="price-tile__val"><span class="price-tile__num" data-count-to="3">0</span>&nbsp;Tage</div>
           <div class="price-tile__lbl">maximale Leihdauer (72&nbsp;Std.)</div>
         </div>
       </div>
@@ -206,39 +209,30 @@
       <div class="heads reveal" style="margin-top: clamp(2.6rem, 6vw, 4rem);">
         <span class="eyebrow">Stationen finden</span>
       </div>
-      <div class="map-grid reveal">
-        <article class="map-card">
-          <div class="map-card__head">
-            <h3>Cafè Movie</h3>
-            <a href="https://www.google.com/maps/search/?api=1&query=Caf%C3%A8+Movie+Universit%C3%A4tsstra%C3%9Fe+7+79098+Freiburg" target="_blank" rel="noopener">Route <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
-          </div>
-          <iframe src="https://www.google.com/maps?q=Caf%C3%A8+Movie+Universit%C3%A4tsstra%C3%9Fe+7+79098+Freiburg&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Google Maps: Cafè Movie, Universitätsstraße 7, Freiburg"></iframe>
-          <p class="map-card__addr">Universitätsstraße 7, 79098 Freiburg</p>
-        </article>
-        <article class="map-card">
-          <div class="map-card__head">
-            <h3>Puzzles</h3>
-            <a href="https://www.google.com/maps/search/?api=1&query=Puzzles+Universit%C3%A4tsstra%C3%9Fe+3+79098+Freiburg" target="_blank" rel="noopener">Route <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
-          </div>
-          <iframe src="https://www.google.com/maps?q=Puzzles+Universit%C3%A4tsstra%C3%9Fe+3+79098+Freiburg&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Google Maps: Puzzles, Universitätsstraße 3, Freiburg"></iframe>
-          <p class="map-card__addr">Universitätsstraße 3, 79098 Freiburg</p>
-        </article>
-        <article class="map-card">
-          <div class="map-card__head">
+      <div class="map-combined reveal">
+        <iframe src="https://www.google.com/maps?saddr=Bertoldstra%C3%9Fe+46,+79098+Freiburg&daddr=Bertoldstra%C3%9Fe+48,+79098+Freiburg+to:Universit%C3%A4tsstra%C3%9Fe+3,+79098+Freiburg+to:Universit%C3%A4tsstra%C3%9Fe+7,+79098+Freiburg&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Google Maps: alle vier Enlupa-Stationen in Freiburg"></iframe>
+        <div class="map-combined__list">
+          <div class="map-combined__item">
             <h3>Bächle Keller</h3>
+            <p>Bertoldstraße 46, 79098 Freiburg</p>
             <a href="https://www.google.com/maps/search/?api=1&query=B%C3%A4chle+Keller+Bertoldstra%C3%9Fe+46+79098+Freiburg" target="_blank" rel="noopener">Route <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
           </div>
-          <iframe src="https://www.google.com/maps?q=B%C3%A4chle+Keller+Bertoldstra%C3%9Fe+46+79098+Freiburg&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Google Maps: Bächle Keller, Bertoldstraße 46, Freiburg"></iframe>
-          <p class="map-card__addr">Bertoldstraße 46, 79098 Freiburg</p>
-        </article>
-        <article class="map-card">
-          <div class="map-card__head">
+          <div class="map-combined__item">
             <h3>Bertolds</h3>
+            <p>Bertoldstraße 48, 79098 Freiburg</p>
             <a href="https://www.google.com/maps/search/?api=1&query=Bertolds+Bertoldstra%C3%9Fe+48+79098+Freiburg" target="_blank" rel="noopener">Route <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
           </div>
-          <iframe src="https://www.google.com/maps?q=Bertolds+Bertoldstra%C3%9Fe+48+79098+Freiburg&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Google Maps: Bertolds, Bertoldstraße 48, Freiburg"></iframe>
-          <p class="map-card__addr">Bertoldstraße 48, 79098 Freiburg</p>
-        </article>
+          <div class="map-combined__item">
+            <h3>Puzzles</h3>
+            <p>Universitätsstraße 3, 79098 Freiburg</p>
+            <a href="https://www.google.com/maps/search/?api=1&query=Puzzles+Universit%C3%A4tsstra%C3%9Fe+3+79098+Freiburg" target="_blank" rel="noopener">Route <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+          </div>
+          <div class="map-combined__item">
+            <h3>Cafè Movie</h3>
+            <p>Universitätsstraße 7, 79098 Freiburg</p>
+            <a href="https://www.google.com/maps/search/?api=1&query=Caf%C3%A8+Movie+Universit%C3%A4tsstra%C3%9Fe+7+79098+Freiburg" target="_blank" rel="noopener">Route <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -296,5 +290,6 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
 <script src="assets/js/site.js" defer></script>
+<script src="assets/js/hero-model.js" defer></script>
 </body>
 </html>

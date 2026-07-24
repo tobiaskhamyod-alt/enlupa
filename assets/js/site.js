@@ -1,6 +1,50 @@
-// Enlupa — geteiltes Verhalten für alle Seiten (Nav-Toggle, Reveals, Steps).
+// Enlupa — geteiltes Verhalten für alle Seiten (Nav-Toggle, Reveals, Steps, Batterie-Scrollanzeige).
+
+// ---- Batterie-Scrollanzeige: ein Snippet für alle 5 Seiten, Markup wird
+// hier einmalig erzeugt statt in jeder Seite von Hand dupliziert. ----
+function initBatteryIndicator(reduce) {
+  var wrap = document.createElement("div");
+  wrap.className = "battery-indicator" + (reduce ? " is-reduced" : "");
+  wrap.setAttribute("role", "progressbar");
+  wrap.setAttribute("aria-label", "Lesefortschritt der Seite");
+  wrap.setAttribute("aria-valuemin", "0");
+  wrap.setAttribute("aria-valuemax", "100");
+  wrap.setAttribute("aria-valuenow", "0");
+  wrap.innerHTML =
+    '<svg viewBox="0 0 28 14" aria-hidden="true">' +
+      '<defs><clipPath id="batteryClip"><rect x="1" y="1" width="24" height="12" rx="3"/></clipPath></defs>' +
+      '<rect x="25.5" y="4.5" width="2" height="5" rx="1" class="battery-indicator__tip"></rect>' +
+      '<rect x="1" y="1" width="0" height="12" class="battery-indicator__fill" clip-path="url(#batteryClip)"></rect>' +
+      '<rect x="1" y="1" width="24" height="12" rx="3" class="battery-indicator__shell"></rect>' +
+    '</svg>';
+  document.body.appendChild(wrap);
+
+  var fill = wrap.querySelector(".battery-indicator__fill");
+  var ticking = false;
+
+  function update() {
+    ticking = false;
+    var doc = document.documentElement;
+    var se = document.scrollingElement || doc;
+    var max = doc.scrollHeight - doc.clientHeight;
+    var p = max > 0 ? Math.min(1, Math.max(0, se.scrollTop / max)) : 0;
+    fill.setAttribute("width", (p * 24).toFixed(2));
+    wrap.setAttribute("aria-valuenow", String(Math.round(p * 100)));
+  }
+
+  window.addEventListener("scroll", function () {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(update);
+  }, { passive: true });
+  window.addEventListener("resize", update);
+  update();
+}
+
 window.addEventListener("DOMContentLoaded", function () {
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  initBatteryIndicator(reduce);
 
   // ---- Mobile-Nav Toggle ----
   var burger = document.getElementById("navBurger");
@@ -32,6 +76,9 @@ window.addEventListener("DOMContentLoaded", function () {
 
   if (!g || !ST || reduce) {
     document.querySelectorAll(".step").forEach(function (s) { s.classList.add("is-on"); });
+    document.querySelectorAll(".price-tile__num").forEach(function (el) {
+      el.textContent = el.getAttribute("data-count-to");
+    });
     return;
   }
 
@@ -59,4 +106,21 @@ window.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
+
+  // ---- Preise: Count-up beim Reinscrollen, einmalig ----
+  g.utils.toArray(".price-tile__num").forEach(function (el) {
+    var target = parseFloat(el.getAttribute("data-count-to"));
+    var counter = { val: 0 };
+    ST.create({
+      trigger: el,
+      start: "top 90%",
+      once: true,
+      onEnter: function () {
+        g.to(counter, {
+          val: target, duration: 1.1, ease: "power2.out",
+          onUpdate: function () { el.textContent = Math.round(counter.val); }
+        });
+      }
+    });
+  });
 });
