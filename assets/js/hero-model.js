@@ -34,16 +34,19 @@
     var hero = document.querySelector(".hero");
     if (!hero) return;
     var ticking = false;
-    var BASE_THETA = 260; // Blickwinkel, der die Enlupa-Beschriftung zeigt
+    // Blickwinkel-Bogen, in dem das Enlupa-Logo sichtbar bleibt (225°-315°,
+    // 270° zeigt es flach von vorn). Eine volle 360°-Drehung würde die
+    // Beschriftung die meiste Zeit vom Betrachter wegdrehen.
+    var THETA_FROM = 225;
+    var THETA_TO = 315;
 
     // Fortschritt 0 beim Laden (Hero ganz oben), 1 sobald der Hero komplett
-    // nach oben aus dem Viewport gescrollt ist — eine volle Drehung pro Hero-Höhe,
-    // beginnend beim markenseitigen Blickwinkel statt bei 0°.
+    // nach oben aus dem Viewport gescrollt ist.
     function update() {
       ticking = false;
       var rect = hero.getBoundingClientRect();
       var progress = Math.min(1, Math.max(0, -rect.top / rect.height));
-      var theta = (BASE_THETA + progress * 360) % 360;
+      var theta = THETA_FROM + progress * (THETA_TO - THETA_FROM);
       model.cameraOrbit = theta.toFixed(1) + "deg 80deg 105%";
     }
 
