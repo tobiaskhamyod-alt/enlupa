@@ -34,20 +34,21 @@
     var hero = document.querySelector(".hero");
     if (!hero) return;
     var ticking = false;
-    // Blickwinkel-Bogen, in dem das Enlupa-Logo sichtbar bleibt (225°-315°,
-    // 270° zeigt es flach von vorn). Eine volle 360°-Drehung würde die
-    // Beschriftung die meiste Zeit vom Betrachter wegdrehen.
-    var THETA_FROM = 225;
-    var THETA_TO = 315;
+    // Der Blickwinkel von schräg oben (60°) zeigt die bedruckte Oberseite mit
+    // dem Enlupa-Logo bei JEDEM Drehwinkel — anders als eine seitliche Sicht
+    // (90°), die zwischendurch nur die schmale Kante zeigt. Damit kann sich
+    // die Powerbank beim Scrollen einmal ganz um die eigene Achse drehen,
+    // ohne dass das Logo je aus dem Blick gerät.
+    var PHI = 60;
 
-    // Fortschritt 0 beim Laden (Hero ganz oben), 1 sobald der Hero komplett
-    // nach oben aus dem Viewport gescrollt ist.
+    // Fortschritt 0 beim Laden (Hero ganz oben, Frontansicht mit Logo), 1
+    // sobald der Hero komplett nach oben aus dem Viewport gescrollt ist.
     function update() {
       ticking = false;
       var rect = hero.getBoundingClientRect();
       var progress = Math.min(1, Math.max(0, -rect.top / rect.height));
-      var theta = THETA_FROM + progress * (THETA_TO - THETA_FROM);
-      model.cameraOrbit = theta.toFixed(1) + "deg 80deg 105%";
+      var theta = progress * 360;
+      model.cameraOrbit = theta.toFixed(1) + "deg " + PHI + "deg 105%";
     }
 
     window.addEventListener("scroll", function () {
