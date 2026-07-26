@@ -274,6 +274,7 @@ section { position: relative; }
   background: var(--hairline); border: 1px solid var(--hairline); border-radius: var(--radius); overflow: hidden;
 }
 @media (min-width: 760px) { .price-cards { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 760px) { .price-cards--2 { grid-template-columns: repeat(2, 1fr); } }
 .price-card { background: var(--surface); padding: clamp(1.7rem, 3vw, 2.2rem); display: flex; flex-direction: column; gap: 0.5rem; transition: background .3s; }
 .price-card:hover { background: var(--surface-2); }
 .price-card__badge {
