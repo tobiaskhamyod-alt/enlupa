@@ -275,6 +275,8 @@ section { position: relative; }
 }
 @media (min-width: 760px) { .price-cards { grid-template-columns: repeat(3, 1fr); } }
 @media (min-width: 760px) { .price-cards--2 { grid-template-columns: repeat(2, 1fr); } }
+/* nach den Varianten oben, damit die Einspaltigkeit gewinnt */
+@media (min-width: 760px) { .price-cards--stack { grid-template-columns: 1fr; } }
 .price-card { background: var(--surface); padding: clamp(1.7rem, 3vw, 2.2rem); display: flex; flex-direction: column; gap: 0.5rem; transition: background .3s; }
 .price-card:hover { background: var(--surface-2); }
 .price-card__badge {
@@ -285,6 +287,28 @@ section { position: relative; }
 .price-card h3 { font-family: var(--font-display); font-weight: 700; font-size: 1.18rem; margin: 0; }
 .price-card__val { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.1rem); }
 .price-card p { color: var(--muted); margin: 0; font-size: 0.94rem; }
+
+/* Station-Showcase (Partner werden): Produktbild neben den Preisoptionen.
+   Gleiche Bildsprache wie das Produktbild im Hero (Glow + Drop-Shadow). */
+.station-showcase {
+  margin-top: clamp(2rem, 5vw, 3rem);
+  display: grid; grid-template-columns: 1fr; gap: clamp(1.8rem, 4vw, 3rem);
+  align-items: center;
+}
+@media (min-width: 900px) { .station-showcase { grid-template-columns: minmax(0, 0.95fr) minmax(0, 1fr); } }
+.station-showcase__art { position: relative; display: grid; place-items: center; }
+.station-showcase__art img {
+  position: relative; width: min(78vw, 420px); height: auto;
+  filter: drop-shadow(0 20px 55px rgba(27,130,216,.3));
+}
+.station-showcase__halo {
+  position: absolute; inset: 10% 2%;
+  background: radial-gradient(closest-side, var(--glow), transparent 72%);
+  filter: blur(8px);
+}
+.station-showcase__side { display: flex; flex-direction: column; gap: clamp(1.2rem, 3vw, 1.6rem); }
+.station-showcase__side .price-cards,
+.station-showcase__side .chip-row { margin-top: 0; }
 
 /* ================================================================
    STANDORTE — Foto-Karten
