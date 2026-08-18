@@ -76,9 +76,6 @@ window.addEventListener("DOMContentLoaded", function () {
 
   if (!g || !ST || reduce) {
     document.querySelectorAll(".step").forEach(function (s) { s.classList.add("is-on"); });
-    document.querySelectorAll(".price-tile__num").forEach(function (el) {
-      el.textContent = el.getAttribute("data-count-to");
-    });
     return;
   }
 
@@ -107,10 +104,13 @@ window.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // ---- Preise: Count-up beim Reinscrollen, einmalig ----
+  // ---- Preise: Count-up beim Reinscrollen, einmalig. Der Zielwert steht
+  // als echter Text im Markup (SEO/No-JS-fest) und wird hier nur ausgelesen,
+  // auf 0 gesetzt und wieder hochgezählt. ----
   g.utils.toArray(".price-tile__num").forEach(function (el) {
-    var target = parseFloat(el.getAttribute("data-count-to"));
+    var target = parseFloat(el.textContent);
     var counter = { val: 0 };
+    el.textContent = "0";
     ST.create({
       trigger: el,
       start: "top 90%",
@@ -123,4 +123,9 @@ window.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
+
+  // Falls Web-Fonts oder Bilder nach dem ersten ScrollTrigger-Check noch
+  // Layout verschieben, neu berechnen — sonst kann ein Trigger, dessen
+  // Position sich verschoben hat, nie feuern und der Preis bliebe bei 0.
+  window.addEventListener("load", function () { ST.refresh(); });
 });
